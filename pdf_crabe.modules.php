@@ -25,9 +25,6 @@
  * or see http://www.gnu.org/
  */
 
-
-
- 
 /**
  *	\file       htdocs/core/modules/facture/doc/pdf_crabe.modules.php
  *	\ingroup    facture
@@ -1599,20 +1596,24 @@ class pdf_crabe extends ModelePDFFactures
 			else
 			{
 				$text=$this->emetteur->name;
-				$pdf->MultiCell($w, 4, $outputlangs->convToOutputCharset($text), 0, 'L');
+			//	$pdf->MultiCell($w, 4, $outputlangs->convToOutputCharset($text), 0, 'L'); //ketan-disabled Company header name 
 			}
 		}
 
 	
 
 
-$pdf->Image('https://varniinfoweb.com/erp/core/modules/facture/doc/header.jpg', 10, 10, 190, 30, 'JPG', 'http://www.varniinfoweb.com', '', true, 150, '', false, false, 0, false, false, false);
+//$pdf->Image('https://varniinfoweb.com/erp/core/modules/facture/doc/header.jpg', 10, 10, 190, 30, 'JPG', 'http://www.varniinfoweb.com', '', true, 150, '', false, false, 0, false, false, false);
 
 
 
 
 // Image example with resizing
-$pdf->Image('https://varniinfoweb.com/erp/core/modules/facture/doc/footer.jpg', 10, 260, 190, 21, 'JPG', 'http://www.varniinfoweb.com', '', true, 150, '', false, false, 0, false, false, false);
+$pdf->Image('https://varniinfoweb.com/erp/core/modules/facture/doc/vi_footer.jpg', 10, 260, 190, 21, 'JPG', 'http://www.varniinfoweb.com', '', true, 300, '', false, false, 0, false, false, false);
+
+//$pdf->ImageSVG($file='/home/varnity3/public_html/erp/core/modules/facture/doc/vi_footer.svg', $x=10, $y=260, $w=190, $h=21, $link='', $align='', $palign='', $border=0, $fitonpage=false);
+
+
 
 
 
@@ -1631,29 +1632,41 @@ $pdf->Image('https://varniinfoweb.com/erp/core/modules/facture/doc/footer.jpg', 
 
 		
 		$pdf->SetFont('', 'B', $default_font_size);
-		$pdf->SetXY(107, 50);
-	
-		$pdf->Cell(45, 9, 'INVOICE NO', 1, 1, 'L', 0, '', 0);
-		$pdf->SetXY(107, 59);
-		$pdf->Cell(45, 9, 'INVOICE DATE', 1, 1, 'L', 0, '', 0);
-		$pdf->SetXY(107, 68);
-		$pdf->Cell(45, 9, 'PO NO', 1, 1, 'L', 0, '', 0);
-		$pdf->SetXY(107, 77);
-		$pdf->Cell(45, 9, 'PO DATE ', 1, 1, 'L', 0, '', 0);
-		
 
+		   
 
-		$pdf->SetXY(100, 50);
-		$pdf->SetTextColor(0, 60, 60);
-		$pdf->Cell(45, 0, $outputlangs->transnoentities("DateInvoice")." : " . dol_print_date($object->date, "day", false, $outputlangs), '', 'R'); //invoicedate-ketan
-		
+		$pdf->SetXY($posx, $posy);
+			$posx = 10;
+			$posy = 50;	
+			$rect_bill_detail_width = 93; 
+			$rect_bill_detail_height = 36; 
 
 
 
+			//billing to rectanglebox 	
+			$pdf->SetLineStyle(array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)));
+			$pdf->RoundedRect($posx, $posy, 93, 36, 0, '1111', null, $style6);
+			
+			
+			
+			
+			//BILLING DETAILS 
 
+			$pdf->SetXY($posx, $posy);
+			$posx = 107;
+			$posy = 50;	
+			$rect_bill_detail_width = 93; 
+			$rect_bill_detail_height = 36; 
 
-
-
+			$pdf->SetLineStyle(array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)));
+			
+			$pdf->RoundedRect($posx, $posy, $rect_bill_detail_width, $rect_bill_detail_height, 0, '1111', null, $style6);
+			
+			$pdf->Line($posx, $posy+9, $posx+$rect_bill_detail_width, $posy+9, $style3); // horizantal line 01 
+			$pdf->Line($posx, $posy+18, $posx+$rect_bill_detail_width, $posy+18, $style3); // horizantal line 02
+			$pdf->Line($posx, $posy+27, $posx+$rect_bill_detail_width, $posy+27, $style3); // horizantal line 03 
+			//$pdf->Line($posx, $posy+36, $posx+$rect_bill_detail_width, $posy+36, $style3); // horizantal line 04
+			
 		$pdf->SetFont('', 'B', $default_font_size);
 
 		$posy+=5;
@@ -1796,21 +1809,7 @@ $pdf->Image('https://varniinfoweb.com/erp/core/modules/facture/doc/footer.jpg', 
 			$posx=$this->page_largeur-$this->marge_droite-$widthrecbox;
 			if (! empty($conf->global->MAIN_INVERT_SENDER_RECIPIENT)) $posx=$this->marge_gauche;
 
-		
 
-
-		
-			
-
-
-
-			//billing to rectanglebox 	
-			$pdf->SetLineStyle(array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)));
-			$pdf->RoundedRect(10, 50, 93, 37, 0, '1111', null, $style6);
-
-			//BILLING DETAILS 
-			$pdf->SetLineStyle(array('width' => 0.3, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)));
-			$pdf->RoundedRect(107, 50, 93, 37, 0, '1111', null, $style6);
 
 
 			// // Show recipient frame
